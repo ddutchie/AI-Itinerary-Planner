@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Travel Planner - Your Personal AI Travel Concierge</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="shortcut icon" type="image/png" href="favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .nav-bar {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 20px 30px;
+            z-index: 1000;
+        }
+
+        .privacy-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .privacy-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-icon {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+
+        .hero .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        .hero .description {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            max-width: 700px;
+        }
+
+        .cta-button {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 80px 20px;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #2c3e50;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card .emoji {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .screenshots {
+            background: #f8f9fa;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .screenshot {
+            text-align: center;
+        }
+
+        .screenshot img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot img:hover {
+            transform: scale(1.05);
+        }
+
+        .testimonials {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .testimonial p {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .premium {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .premium-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .premium-feature {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-bar {
+                padding: 15px 20px;
+            }
+            
+            .privacy-link {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+            
+            .hero-icon {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 20px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .tagline {
+                font-size: 1.2rem;
+            }
+            
+            .section h2 {
+                font-size: 2rem;
+            }
+            
+            .screenshots-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="nav-bar">
+            <a href="privacy.html" class="privacy-link">Privacy Policy</a>
+        </div>
+        <img src="icon.png" alt="AI Travel Planner Icon" class="hero-icon">
+        <h1>Your Personal AI Travel Concierge</h1>
+        <p class="tagline">Hours of Research in Minutes</p>
+        <p class="description">Transform your travel dreams into perfectly planned adventures with AI Travel Itinerary Planner. Our intelligent AI creates personalized day-by-day itineraries in minutes, discovering hidden gems and authentic local experiences that guidebooks miss.</p>
+        <!-- CTA Button - TEMPORARILY HIDDEN (uncomment to restore) -->
+        <!-- <a href="#download" class="cta-button">Start Planning Your Next Adventure</a> -->
+    </section>
+
+    <!-- Features Section -->
+    <section class="section">
+        <div class="container">
+            <h2>Smart Travel Planning. Amazing Adventures.</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="emoji">🤖</div>
+                    <h3>AI-Powered Planning</h3>
+                    <p>Advanced AI technology creates comprehensive, personalized itineraries in minutes. Simply tell us your destination, dates, budget, and interests – we'll handle the rest.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="emoji">✨</div>
+                    <h3>Personalized for You</h3>
+                    <p>Every itinerary is uniquely crafted based on your budget preferences, travel dates, activity interests, and accommodation preferences.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="emoji">🗺️</div>
+                    <h3>Comprehensive Details</h3>
+                    <p>Get day-by-day schedules, restaurant recommendations, must-see attractions, hidden gems, interactive maps, and cost estimates.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="emoji">🌍</div>
+                    <h3>Discover Like a Local</h3>
+                    <p>Uncover secret spots only locals know, find authentic experiences beyond tourist traps, with real-time information and detailed location data.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="emoji">💰</div>
+                    <h3>Smart Budget Planning</h3>
+                    <p>Choose from budget, mid-range, or luxury options with accurate cost estimates and optimized spending for maximum experiences.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="emoji">📱</div>
+                    <h3>Seamless Experience</h3>
+                    <p>Beautiful interface, offline access, trip sharing, export options, and perfect compatibility with iPhone and iPad.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="section screenshots">
+        <div class="container">
+            <h2>See It in Action</h2>
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 20px;">Discover Hidden Gems Only Locals Know</p>
+            <div class="screenshots-grid">
+                <div class="screenshot">
+                    <img src="Images/Apple iPhone 16 Pro Max Screenshot 1.png" alt="AI Travel Planner App Screenshot 1">
+                </div>
+                <div class="screenshot">
+                    <img src="Images/Apple iPhone 16 Pro Max Screenshot 2.png" alt="AI Travel Planner App Screenshot 2">
+                </div>
+                <div class="screenshot">
+                    <img src="Images/Apple iPhone 16 Pro Max Screenshot 3.png" alt="AI Travel Planner App Screenshot 3">
+                </div>
+                <div class="screenshot">
+                    <img src="Images/Apple iPhone 16 Pro Max Screenshot 4.png" alt="AI Travel Planner App Screenshot 4">
+                </div>
+                <div class="screenshot">
+                    <img src="Images/Apple iPhone 16 Pro Max Screenshot 5.png" alt="AI Travel Planner App Screenshot 5">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section testimonials">
+        <div class="container">
+            <h2>Why Travelers Love Us</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <p>"Like having a local friend in every city who knows exactly what you like"</p>
+                </div>
+                <div class="testimonial">
+                    <p>"Saved me 10+ hours of research and planning"</p>
+                </div>
+                <div class="testimonial">
+                    <p>"Found amazing places I never would have discovered"</p>
+                </div>
+                <div class="testimonial">
+                    <p>"Perfect balance of popular spots and hidden gems"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Section - TEMPORARILY HIDDEN (remove display: none to restore) -->
+    <section class="section premium" style="display: none;">
+        <div class="container">
+            <h2>Premium Features</h2>
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 40px;">Unlimited Adventures with GPT-4 Powered Planning</p>
+            <div class="premium-features">
+                <div class="premium-feature">
+                    <h3>Unlimited Trips</h3>
+                    <p>Create unlimited itineraries vs 3 free trips</p>
+                </div>
+                <div class="premium-feature">
+                    <h3>GPT-4o Intelligence</h3>
+                    <p>Enhanced AI processing for better recommendations</p>
+                </div>
+                <div class="premium-feature">
+                    <h3>Priority Processing</h3>
+                    <p>Faster generation and advanced customization</p>
+                </div>
+                <div class="premium-feature">
+                    <h3>Advanced Discovery</h3>
+                    <p>Enhanced local discovery features</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section - TEMPORARILY HIDDEN (remove display: none to restore) -->
+    <section class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; display: none;">
+        <div class="container">
+            <h2>Start Your Next Adventure</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 30px;">Turn your travel dreams into detailed, actionable plans. Whether you're exploring Paris, Tokyo, New York, or anywhere in between – your perfect itinerary is just minutes away.</p>
+            <a href="#" class="cta-button" id="download">Download on the App Store</a>
+            <p style="margin-top: 20px; opacity: 0.8;">Try 3 trips for free, then upgrade to premium for unlimited planning power.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 AI Travel Itinerary Planner. All rights reserved.</p>
+            <p style="margin-top: 10px; opacity: 0.7;">Plan Better. Travel Smarter.</p>
+        </div>
+    </footer>
+</body>
+</html>
