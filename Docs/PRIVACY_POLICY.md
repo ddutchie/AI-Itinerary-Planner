@@ -108,7 +108,6 @@ If you have questions, concerns, or requests regarding this Privacy Policy or ou
 
 **Email:** ddutchie@gmail.com  
 **Address:** 705 King Street West, Toronto, M5V 2W8
-**Phone Number:** +1 437-848-0159
 
 For privacy-related concerns, please include "Privacy Policy" in the subject line.
 
