@@ -256,17 +256,28 @@
 
         .itinerary-card {
             background: white;
-            padding: 25px;
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
             cursor: pointer;
             border: 2px solid transparent;
+            overflow: hidden;
         }
 
         .itinerary-card:hover {
             transform: translateY(-5px);
             border-color: #667eea;
+        }
+
+        .itinerary-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .itinerary-content {
+            padding: 25px;
         }
 
         .itinerary-header {
@@ -501,6 +512,16 @@
         .qr-section p {
             color: #666;
             margin-top: 15px;
+        }
+
+        .modal-image {
+            width: 100%;
+            max-width: 400px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         @media (max-width: 768px) {
@@ -844,6 +865,11 @@
             return baseData;
         }
 
+        // Helper function to get image path from JSON file path
+        function getImagePath(jsonFilePath) {
+            return jsonFilePath.replace('.json', '.png');
+        }
+
         // Generate export code like the mobile app
         function generateExportCode(trip) {
             try {
@@ -910,19 +936,25 @@
                 card.className = 'itinerary-card';
                 card.onclick = () => openItineraryModal(itinerary);
                 
+                const imagePath = getImagePath(itinerary.file);
+                
                 card.innerHTML = `
-                    <div class="itinerary-header">
-                        <div class="itinerary-destination">${itinerary.name}</div>
-                        <div class="itinerary-budget budget-${itinerary.budget}">${itinerary.budget}</div>
-                    </div>
-                    <div class="itinerary-duration">${itinerary.duration}</div>
-                    <div class="itinerary-highlights">
-                        <p style="color: #666; margin-bottom: 10px;">${itinerary.description}</p>
-                        <div class="itinerary-activities">
-                            ${itinerary.highlights.map(highlight => `<span class="activity-tag">${highlight}</span>`).join('')}
+                    <img src="${imagePath}" alt="${itinerary.name}" class="itinerary-image" 
+                         onerror="this.style.display='none'" />
+                    <div class="itinerary-content">
+                        <div class="itinerary-header">
+                            <div class="itinerary-destination">${itinerary.name}</div>
+                            <div class="itinerary-budget budget-${itinerary.budget}">${itinerary.budget}</div>
                         </div>
+                        <div class="itinerary-duration">${itinerary.duration}</div>
+                        <div class="itinerary-highlights">
+                            <p style="color: #666; margin-bottom: 10px;">${itinerary.description}</p>
+                            <div class="itinerary-activities">
+                                ${itinerary.highlights.map(highlight => `<span class="activity-tag">${highlight}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="itinerary-cost">${itinerary.cost} per person</div>
                     </div>
-                    <div class="itinerary-cost">${itinerary.cost} per person</div>
                 `;
                 
                 grid.appendChild(card);
@@ -963,7 +995,14 @@
             detailsDiv.style.display = 'block';
             qrSection.style.display = 'none';
             
+            // Get the image path for the current itinerary
+            const imagePath = getImagePath(currentItineraryFile);
+            
             let html = `
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <img src="${imagePath}" alt="${currentItineraryData.destination}" class="modal-image" 
+                         onerror="this.style.display='none'" />
+                </div>
                 <div style="margin-bottom: 20px;">
                     <h3>🗓️ ${formatDate(currentItineraryData.startDate)} - ${formatDate(currentItineraryData.endDate)}</h3>
                     <p><strong>Budget:</strong> ${currentItineraryData.budget.charAt(0).toUpperCase() + currentItineraryData.budget.slice(1)}</p>
