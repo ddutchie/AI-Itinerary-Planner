@@ -1,0 +1,442 @@
+{
+  "id": "example-newyork-midrange-001",
+  "destination": "New York City, NY",
+  "startDate": "2024-11-10T00:00:00.000Z",
+  "endDate": "2024-11-13T00:00:00.000Z",
+  "budget": "mid-range",
+  "activities": ["Broadway Shows", "Museums", "Food Tours", "Shopping"],
+  "createdAt": "2024-01-15T16:45:00.000Z",
+  "hasAccommodation": false,
+  "itinerary": {
+    "accommodation": [
+      {
+        "id": "acc-nyc-001",
+        "name": "Pod Hotels Times Square",
+        "type": "hotel",
+        "description": "Modern compact hotel in the heart of Times Square with stylish design",
+        "priceRange": "$150-220 per night",
+        "rating": 4.2,
+        "location": {
+          "address": "400 W 42nd St, New York, NY 10036",
+          "coordinates": {
+            "latitude": 40.7589,
+            "longitude": -73.9899
+          }
+        },
+        "amenities": ["WiFi", "Fitness center", "Restaurant", "24/7 front desk"],
+        "website": "https://www.podhotels.com",
+        "phone": "+1 212-355-0300",
+        "checkInTime": "3:00 PM",
+        "checkOutTime": "11:00 AM",
+        "tips": "Request a higher floor for better city views; great location for Broadway shows"
+      },
+      {
+        "id": "acc-nyc-002",
+        "name": "citizenM New York Bowery",
+        "type": "hotel",
+        "description": "Design hotel in trendy Lower East Side with modern amenities",
+        "priceRange": "$180-280 per night",
+        "rating": 4.4,
+        "location": {
+          "address": "189 Bowery, New York, NY 10002",
+          "coordinates": {
+            "latitude": 40.7223,
+            "longitude": -73.9927
+          }
+        },
+        "amenities": ["Smart room controls", "Gym", "Restaurant", "Rooftop bar"],
+        "website": "https://www.citizenm.com",
+        "phone": "+1 212-319-4000",
+        "checkInTime": "2:00 PM",
+        "checkOutTime": "11:00 AM",
+        "tips": "Check out the rooftop bar for great city skyline views"
+      }
+    ],
+    "days": [
+      {
+        "date": "2024-11-10",
+        "dayNumber": 1,
+        "activities": [
+          {
+            "id": "act-nyc-001",
+            "name": "AirTrain + Subway to Manhattan",
+            "type": "activity",
+            "description": "Take AirTrain from JFK to Jamaica, then subway to Manhattan",
+            "time": "12:00",
+            "duration": "1.5 hours",
+            "cost": "$12-15",
+            "location": {
+              "address": "JFK Airport, Queens, NY",
+              "coordinates": {
+                "latitude": 40.6413,
+                "longitude": -73.7781
+              }
+            },
+            "tips": "Buy a MetroCard for convenient subway travel throughout your stay"
+          },
+          {
+            "id": "act-nyc-002",
+            "name": "Central Park Walking Tour",
+            "type": "attraction",
+            "description": "Self-guided walk through America's most famous urban park",
+            "time": "14:00",
+            "duration": "2.5 hours",
+            "cost": "Free",
+            "location": {
+              "address": "Central Park, New York, NY 10024",
+              "coordinates": {
+                "latitude": 40.7829,
+                "longitude": -73.9654
+              }
+            },
+            "tips": "Visit Bethesda Fountain, Bow Bridge, and Strawberry Fields; beautiful fall foliage in November",
+            "rating": 4.6
+          },
+          {
+            "id": "act-nyc-003",
+            "name": "Shake Shack",
+            "type": "restaurant",
+            "description": "Famous NYC burger chain with premium fast-casual dining",
+            "time": "17:00",
+            "duration": "1 hour",
+            "cost": "$15-25",
+            "location": {
+              "address": "691 8th Ave, New York, NY 10036",
+              "coordinates": {
+                "latitude": 40.7614,
+                "longitude": -73.9776
+              }
+            },
+            "tips": "Try the ShackBurger and concrete custard dessert; multiple locations throughout the city",
+            "rating": 4.3,
+            "website": "https://www.shakeshack.com"
+          },
+          {
+            "id": "act-nyc-004",
+            "name": "Times Square Evening",
+            "type": "attraction",
+            "description": "Experience the bright lights and energy of Times Square at night",
+            "time": "18:30",
+            "duration": "1.5 hours",
+            "cost": "Free",
+            "location": {
+              "address": "Times Square, New York, NY 10036",
+              "coordinates": {
+                "latitude": 40.7580,
+                "longitude": -73.9855
+              }
+            },
+            "tips": "Best experienced after dark when all the billboards light up; great for photos",
+            "rating": 4.1
+          },
+          {
+            "id": "act-nyc-005",
+            "name": "Broadway Show",
+            "type": "attraction",
+            "description": "Catch a world-class Broadway musical or play",
+            "time": "20:00",
+            "duration": "2.5 hours",
+            "cost": "$80-200 per ticket",
+            "location": {
+              "address": "Theater District, New York, NY",
+              "coordinates": {
+                "latitude": 40.7590,
+                "longitude": -73.9845
+              }
+            },
+            "tips": "Book popular shows in advance; try lottery tickets for discounted last-minute seats",
+            "rating": 4.8,
+            "website": "https://www.broadway.com"
+          }
+        ]
+      },
+      {
+        "date": "2024-11-11",
+        "dayNumber": 2,
+        "activities": [
+          {
+            "id": "act-nyc-006",
+            "name": "Statue of Liberty & Ellis Island",
+            "type": "attraction",
+            "description": "Ferry to Liberty Island and Ellis Island for iconic American landmarks",
+            "time": "09:00",
+            "duration": "4 hours",
+            "cost": "$25-30 per person",
+            "location": {
+              "address": "Liberty Island, New York, NY 10004",
+              "coordinates": {
+                "latitude": 40.6892,
+                "longitude": -74.0445
+              }
+            },
+            "tips": "Book pedestal or crown access in advance; bring layers as it can be windy on the water",
+            "rating": 4.5,
+            "website": "https://www.nps.gov/stli"
+          },
+          {
+            "id": "act-nyc-007",
+            "name": "Stone Street Historic District",
+            "type": "attraction",
+            "description": "Historic cobblestone street in Financial District with restaurants and bars",
+            "time": "13:30",
+            "duration": "1 hour",
+            "cost": "Free",
+            "location": {
+              "address": "Stone St, New York, NY 10004",
+              "coordinates": {
+                "latitude": 40.7043,
+                "longitude": -74.0113
+              }
+            },
+            "tips": "Great for lunch and photos; one of NYC's few remaining cobblestone streets",
+            "rating": 4.2
+          },
+          {
+            "id": "act-nyc-008",
+            "name": "9/11 Memorial",
+            "type": "attraction",
+            "description": "Moving tribute to those lost in the September 11th attacks",
+            "time": "15:00",
+            "duration": "1.5 hours",
+            "cost": "Free (museum extra)",
+            "location": {
+              "address": "180 Greenwich St, New York, NY 10007",
+              "coordinates": {
+                "latitude": 40.7115,
+                "longitude": -74.0134
+              }
+            },
+            "tips": "Very emotional experience; museum tickets required for indoor exhibits",
+            "rating": 4.7,
+            "website": "https://www.911memorial.org"
+          },
+          {
+            "id": "act-nyc-009",
+            "name": "Brooklyn Bridge Walk",
+            "type": "attraction",
+            "description": "Walk across the iconic Brooklyn Bridge for stunning city views",
+            "time": "17:00",
+            "duration": "1 hour",
+            "cost": "Free",
+            "location": {
+              "address": "Brooklyn Bridge, New York, NY",
+              "coordinates": {
+                "latitude": 40.7061,
+                "longitude": -73.9969
+              }
+            },
+            "tips": "Start from Manhattan side; sunset timing offers beautiful photography opportunities",
+            "rating": 4.6
+          },
+          {
+            "id": "act-nyc-010",
+            "name": "Grimaldi's Pizza",
+            "type": "restaurant",
+            "description": "Famous coal-fired brick oven pizza in Brooklyn Heights",
+            "time": "18:30",
+            "duration": "1.5 hours",
+            "cost": "$25-35",
+            "location": {
+              "address": "1 Front St, Brooklyn, NY 11201",
+              "coordinates": {
+                "latitude": 40.7025,
+                "longitude": -73.9939
+              }
+            },
+            "tips": "No reservations accepted; try the classic margherita pizza",
+            "rating": 4.4,
+            "website": "https://www.grimaldispizzeria.com"
+          }
+        ]
+      },
+      {
+        "date": "2024-11-12",
+        "dayNumber": 3,
+        "activities": [
+          {
+            "id": "act-nyc-011",
+            "name": "Metropolitan Museum of Art",
+            "type": "attraction",
+            "description": "One of the world's largest and most prestigious art museums",
+            "time": "10:00",
+            "duration": "3 hours",
+            "cost": "$30 suggested donation",
+            "location": {
+              "address": "1000 5th Ave, New York, NY 10028",
+              "coordinates": {
+                "latitude": 40.7794,
+                "longitude": -73.9632
+              }
+            },
+            "tips": "Focus on specific wings to avoid overwhelm; Egyptian art and European paintings are highlights",
+            "rating": 4.7,
+            "website": "https://www.metmuseum.org"
+          },
+          {
+            "id": "act-nyc-012",
+            "name": "Lunch at The Plaza Food Hall",
+            "type": "restaurant",
+            "description": "Upscale food court in the basement of The Plaza Hotel",
+            "time": "13:30",
+            "duration": "1 hour",
+            "cost": "$20-35",
+            "location": {
+              "address": "1 W 59th St, New York, NY 10019",
+              "coordinates": {
+                "latitude": 40.7648,
+                "longitude": -73.9754
+              }
+            },
+            "tips": "Multiple food vendors offering various cuisines; beautiful elegant setting",
+            "rating": 4.3
+          },
+          {
+            "id": "act-nyc-013",
+            "name": "High Line Park",
+            "type": "attraction",
+            "description": "Elevated park built on former railway line with unique city views",
+            "time": "15:00",
+            "duration": "2 hours",
+            "cost": "Free",
+            "location": {
+              "address": "High Line, New York, NY 10011",
+              "coordinates": {
+                "latitude": 40.7480,
+                "longitude": -74.0048
+              }
+            },
+            "tips": "Enter at Gansevoort Street; walk north to 34th Street for full experience",
+            "rating": 4.5,
+            "website": "https://www.thehighline.org"
+          },
+          {
+            "id": "act-nyc-014",
+            "name": "Chelsea Market",
+            "type": "attraction",
+            "description": "Indoor food hall and shopping complex in converted cookie factory",
+            "time": "17:30",
+            "duration": "1.5 hours",
+            "cost": "$15-30",
+            "location": {
+              "address": "75 9th Ave, New York, NY 10011",
+              "coordinates": {
+                "latitude": 40.7420,
+                "longitude": -74.0057
+              }
+            },
+            "tips": "Try lobster roll from Lobster Place and artisanal chocolates from L'Arte del Gelato",
+            "rating": 4.4,
+            "website": "https://www.chelseamarket.com"
+          },
+          {
+            "id": "act-nyc-015",
+            "name": "Empire State Building",
+            "type": "attraction",
+            "description": "Iconic Art Deco skyscraper with observation decks",
+            "time": "20:00",
+            "duration": "2 hours",
+            "cost": "$40-65",
+            "location": {
+              "address": "20 W 34th St, New York, NY 10001",
+              "coordinates": {
+                "latitude": 40.7484,
+                "longitude": -73.9857
+              }
+            },
+            "tips": "Night visits offer spectacular city lights; book express tickets to skip lines",
+            "rating": 4.4,
+            "website": "https://www.esbnyc.com"
+          }
+        ]
+      },
+      {
+        "date": "2024-11-13",
+        "dayNumber": 4,
+        "activities": [
+          {
+            "id": "act-nyc-016",
+            "name": "Museum of Modern Art (MoMA)",
+            "type": "attraction",
+            "description": "World's most influential modern and contemporary art museum",
+            "time": "10:00",
+            "duration": "2.5 hours",
+            "cost": "$25",
+            "location": {
+              "address": "11 W 53rd St, New York, NY 10019",
+              "coordinates": {
+                "latitude": 40.7614,
+                "longitude": -73.9776
+              }
+            },
+            "tips": "Don't miss Van Gogh's Starry Night and Picasso's Les Demoiselles d'Avignon",
+            "rating": 4.6,
+            "website": "https://www.moma.org"
+          },
+          {
+            "id": "act-nyc-017",
+            "name": "Fifth Avenue Shopping",
+            "type": "activity",
+            "description": "Shop at iconic stores along Fifth Avenue including Tiffany & Co and Saks",
+            "time": "13:00",
+            "duration": "2 hours",
+            "cost": "$50-500+",
+            "location": {
+              "address": "5th Ave, New York, NY",
+              "coordinates": {
+                "latitude": 40.7614,
+                "longitude": -73.9776
+              }
+            },
+            "tips": "Window shopping is free and equally enjoyable; visit Apple Store's glass cube",
+            "rating": 4.5
+          },
+          {
+            "id": "act-nyc-018",
+            "name": "Katz's Delicatessen",
+            "type": "restaurant",
+            "description": "Legendary Jewish deli famous for pastrami sandwiches since 1888",
+            "time": "15:30",
+            "duration": "1 hour",
+            "cost": "$25-35",
+            "location": {
+              "address": "205 E Houston St, New York, NY 10002",
+              "coordinates": {
+                "latitude": 40.7223,
+                "longitude": -73.9873
+              }
+            },
+            "tips": "Order the pastrami on rye; don't lose your ticket or pay $50 fee!",
+            "rating": 4.3,
+            "website": "https://katzsdelicatessen.com"
+          },
+          {
+            "id": "act-nyc-019",
+            "name": "AirTrain to JFK",
+            "type": "activity",
+            "description": "Return journey to airport via subway and AirTrain",
+            "time": "17:30",
+            "duration": "1.5 hours",
+            "cost": "$12-15",
+            "location": {
+              "address": "Manhattan to JFK Airport",
+              "coordinates": {
+                "latitude": 40.6413,
+                "longitude": -73.7781
+              }
+            },
+            "tips": "Allow extra time for TSA security; JFK can be busy"
+          }
+        ]
+      }
+    ],
+    "totalBudgetEstimate": "$1200-1800 per person",
+    "tips": [
+      "Purchase a MetroCard or use contactless payment for subway travel",
+      "Tipping is expected - 18-20% at restaurants, $1-2 per drink at bars",
+      "Book Broadway shows and popular restaurants in advance",
+      "Walk when possible - many attractions are within walking distance",
+      "November can be chilly, so bring layers and comfortable walking shoes",
+      "Many museums have 'suggested' admission fees - you can pay what you wish"
+    ]
+  }
+}

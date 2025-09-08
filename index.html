@@ -242,6 +242,267 @@
             padding: 40px 20px;
         }
 
+        /* Example Itineraries Section */
+        .example-itineraries {
+            background: #f8f9fa;
+        }
+
+        .itinerary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .itinerary-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .itinerary-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+        }
+
+        .itinerary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .itinerary-destination {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .itinerary-budget {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .budget-luxury {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .budget-mid-range {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .budget-budget {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .itinerary-dates {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .itinerary-duration {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .itinerary-highlights {
+            margin-bottom: 15px;
+        }
+
+        .itinerary-activities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .activity-tag {
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: #495057;
+        }
+
+        .itinerary-cost {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d7db;
+            transform: translateY(-2px);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .itinerary-details {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .day-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .day-header {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .activity-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .activity-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .activity-time {
+            color: #667eea;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .activity-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .activity-cost {
+            color: #28a745;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .qr-section {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .qr-section h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .qr-section p {
+            color: #666;
+            margin-top: 15px;
+        }
+
         @media (max-width: 768px) {
             .nav-bar {
                 padding: 15px 20px;
@@ -273,6 +534,27 @@
             .screenshots-grid {
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 20px;
+            }
+
+            .itinerary-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+            }
+
+            .modal-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .modal-actions {
+                width: 100%;
+                justify-content: space-between;
             }
         }
     </style>
@@ -356,6 +638,39 @@
         </div>
     </section>
 
+    <!-- Example Itineraries Section -->
+    <section class="section example-itineraries">
+        <div class="container">
+            <h2>See Sample Itineraries</h2>
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 40px;">Experience the power of AI planning with these real examples</p>
+            <div class="itinerary-grid">
+                <!-- Itinerary cards will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Itinerary Modal -->
+    <div id="itineraryModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <div class="modal-actions">
+                    <button id="viewItineraryBtn" class="btn-primary">View Full Itinerary</button>
+                    <button id="showQRBtn" class="btn-secondary">Show QR Code</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="itineraryDetails" class="itinerary-details"></div>
+                <div id="qrCodeSection" class="qr-section" style="display: none;">
+                    <h3>Import to App</h3>
+                    <div id="qrcode"></div>
+                    <p>Scan this QR code with your phone to import this itinerary into the AI Travel Planner app</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Testimonials Section -->
     <section class="section testimonials">
         <div class="container">
@@ -420,5 +735,227 @@
             <p style="margin-top: 10px; opacity: 0.7;">Plan Better. Travel Smarter.</p>
         </div>
     </footer>
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
+    <script>
+        // Example itineraries data
+        const itineraries = [
+            {
+                name: 'Paris Luxury Getaway',
+                file: 'ExampleItineraries/paris-luxury-itinerary.json',
+                description: 'Indulge in the finest Paris has to offer with Michelin-starred dining, luxury shopping, and exclusive experiences',
+                duration: '5 days',
+                budget: 'luxury',
+                cost: '$3500-5000',
+                highlights: ['Michelin-starred restaurants', 'Private Louvre tour', 'Luxury shopping on Avenue Montaigne']
+            },
+            {
+                name: 'Tokyo Budget Adventure',
+                file: 'ExampleItineraries/tokyo-budget-itinerary.json',
+                description: 'Explore Tokyo\'s vibrant culture, street food, and hidden gems without breaking the bank',
+                duration: '4 days',
+                budget: 'budget',
+                cost: '$400-600',
+                highlights: ['Street food tours', 'Traditional temples', 'Anime & pop culture hotspots']
+            },
+            {
+                name: 'New York City Classic',
+                file: 'ExampleItineraries/new-york-midrange-itinerary.json',
+                description: 'Experience the best of NYC with Broadway shows, world-class museums, and iconic landmarks',
+                duration: '4 days',
+                budget: 'mid-range',
+                cost: '$1200-1800',
+                highlights: ['Broadway shows', 'Top museums', 'Iconic landmarks']
+            }
+        ];
+
+        let currentItineraryData = null;
+
+        // Load and display itinerary cards
+        function loadItineraryCards() {
+            const grid = document.querySelector('.itinerary-grid');
+            
+            itineraries.forEach((itinerary, index) => {
+                const card = document.createElement('div');
+                card.className = 'itinerary-card';
+                card.onclick = () => openItineraryModal(itinerary);
+                
+                card.innerHTML = `
+                    <div class="itinerary-header">
+                        <div class="itinerary-destination">${itinerary.name}</div>
+                        <div class="itinerary-budget budget-${itinerary.budget}">${itinerary.budget}</div>
+                    </div>
+                    <div class="itinerary-duration">${itinerary.duration}</div>
+                    <div class="itinerary-highlights">
+                        <p style="color: #666; margin-bottom: 10px;">${itinerary.description}</p>
+                        <div class="itinerary-activities">
+                            ${itinerary.highlights.map(highlight => `<span class="activity-tag">${highlight}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="itinerary-cost">${itinerary.cost} per person</div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Open itinerary modal
+        async function openItineraryModal(itinerary) {
+            const modal = document.getElementById('itineraryModal');
+            const modalTitle = document.getElementById('modalTitle');
+            
+            modalTitle.textContent = itinerary.name;
+            modal.style.display = 'block';
+            
+            // Load the JSON data
+            try {
+                const response = await fetch(itinerary.file);
+                if (!response.ok) throw new Error('Failed to load itinerary');
+                currentItineraryData = await response.json();
+                
+                showItineraryDetails();
+            } catch (error) {
+                console.error('Error loading itinerary:', error);
+                document.getElementById('itineraryDetails').innerHTML = '<p>Error loading itinerary details. Please try again.</p>';
+            }
+        }
+
+        // Show itinerary details
+        function showItineraryDetails() {
+            if (!currentItineraryData) return;
+            
+            const detailsDiv = document.getElementById('itineraryDetails');
+            const qrSection = document.getElementById('qrCodeSection');
+            
+            detailsDiv.style.display = 'block';
+            qrSection.style.display = 'none';
+            
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <h3>🗓️ ${formatDate(currentItineraryData.startDate)} - ${formatDate(currentItineraryData.endDate)}</h3>
+                    <p><strong>Budget:</strong> ${currentItineraryData.budget.charAt(0).toUpperCase() + currentItineraryData.budget.slice(1)}</p>
+                    <p><strong>Total Estimate:</strong> ${currentItineraryData.itinerary.totalBudgetEstimate}</p>
+                    <p><strong>Activities:</strong> ${currentItineraryData.activities.join(', ')}</p>
+                </div>
+            `;
+            
+            // Add accommodation if available
+            if (currentItineraryData.itinerary.accommodation && currentItineraryData.itinerary.accommodation.length > 0) {
+                html += `
+                    <div style="margin-bottom: 25px; padding: 15px; background: #e3f2fd; border-radius: 8px;">
+                        <h4>🏨 Recommended Accommodation</h4>
+                        ${currentItineraryData.itinerary.accommodation.slice(0, 2).map(acc => `
+                            <div style="margin: 10px 0;">
+                                <strong>${acc.name}</strong> (${acc.type}) - ${acc.priceRange}<br>
+                                <span style="color: #666; font-size: 0.9rem;">${acc.description}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // Add daily itinerary
+            currentItineraryData.itinerary.days.forEach(day => {
+                html += `
+                    <div class="day-section">
+                        <div class="day-header">Day ${day.dayNumber} - ${formatDate(day.date)}</div>
+                        ${day.activities.map(activity => `
+                            <div class="activity-item">
+                                <div class="activity-time">${activity.time} (${activity.duration})</div>
+                                <div class="activity-name">${activity.name}</div>
+                                <div class="activity-description">${activity.description}</div>
+                                <div class="activity-cost">💰 ${activity.cost}</div>
+                                ${activity.tips ? `<div style="font-style: italic; color: #666; margin-top: 5px;">💡 ${activity.tips}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            });
+            
+            // Add travel tips
+            if (currentItineraryData.itinerary.tips && currentItineraryData.itinerary.tips.length > 0) {
+                html += `
+                    <div style="margin-top: 25px; padding: 15px; background: #fff3e0; border-radius: 8px;">
+                        <h4>💡 Travel Tips</h4>
+                        <ul>
+                            ${currentItineraryData.itinerary.tips.map(tip => `<li style="margin: 5px 0;">${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            detailsDiv.innerHTML = html;
+        }
+
+        // Show QR code
+        function showQRCode() {
+            if (!currentItineraryData) return;
+            
+            const detailsDiv = document.getElementById('itineraryDetails');
+            const qrSection = document.getElementById('qrCodeSection');
+            const qrCodeDiv = document.getElementById('qrcode');
+            
+            detailsDiv.style.display = 'none';
+            qrSection.style.display = 'block';
+            
+            // Clear previous QR code
+            qrCodeDiv.innerHTML = '';
+            
+            // Create QR code with the itinerary data
+            const itineraryUrl = `${window.location.origin}/${currentItineraryData.id}.json`;
+            
+            QRCode.toCanvas(qrCodeDiv, JSON.stringify(currentItineraryData), {
+                width: 256,
+                margin: 2,
+                color: {
+                    dark: '#333333',
+                    light: '#FFFFFF'
+                }
+            }, function (error) {
+                if (error) {
+                    console.error('QR Code generation error:', error);
+                    qrCodeDiv.innerHTML = '<p>Error generating QR code</p>';
+                }
+            });
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('itineraryModal').style.display = 'none';
+            currentItineraryData = null;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            loadItineraryCards();
+            
+            // Modal close button
+            document.querySelector('.close').onclick = closeModal;
+            
+            // Modal buttons
+            document.getElementById('viewItineraryBtn').onclick = showItineraryDetails;
+            document.getElementById('showQRBtn').onclick = showQRCode;
+            
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                const modal = document.getElementById('itineraryModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+        });
+    </script>
 </body>
 </html>
