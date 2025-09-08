@@ -737,7 +737,7 @@
     </footer>
 
     <!-- QR Code Library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://unpkg.com/qrious@4.0.2/dist/qrious.min.js"></script>
     
     <script>
         // Example itineraries data
@@ -1035,48 +1035,56 @@
             qrCodeDiv.innerHTML = '';
             
             try {
+                // Check if QR code library is available
+                if (typeof QRious === 'undefined') {
+                    throw new Error('QR code library not loaded. Please refresh the page and try again.');
+                }
+                
                 // Generate export code like the mobile app
                 const exportResult = generateExportCode(currentItineraryData);
                 
-                // Create QR code with the encoded trip data
-                QRCode.toCanvas(qrCodeDiv, exportResult.code, {
-                    width: 256,
-                    margin: 2,
-                    color: {
-                        dark: '#333333',
-                        light: '#FFFFFF'
-                    }
-                }, function (error) {
-                    if (error) {
-                        console.error('QR Code generation error:', error);
-                        qrCodeDiv.innerHTML = '<p>Error generating QR code</p>';
-                    } else {
-                        // Update the QR section with export info
-                        const existingText = qrSection.querySelector('p');
-                        if (existingText) {
-                            const exportTypeText = exportResult.type === 'lite' ? 
-                                'Contains trip parameters only. The app will regenerate the full itinerary.' :
-                                exportResult.type === 'compressed' ?
-                                'Contains essential itinerary data with limited details.' :
-                                'Contains the complete itinerary with all details.';
-                                
-                            existingText.innerHTML = `
-                                Scan this QR code with your phone to import this itinerary into the AI Travel Planner app.<br>
-                                <small style="color: #666; margin-top: 10px; display: block;">
-                                    📦 ${exportResult.type.charAt(0).toUpperCase() + exportResult.type.slice(1)} Export (${exportResult.length} chars)<br>
-                                    ${exportTypeText}
-                                </small>
-                            `;
-                        }
-                    }
+                // Create a canvas element for the QR code
+                const canvas = document.createElement('canvas');
+                qrCodeDiv.appendChild(canvas);
+                
+                // Create QR code with the encoded trip data using QRious library
+                const qr = new QRious({
+                    element: canvas,
+                    value: exportResult.code,
+                    size: 256,
+                    background: 'white',
+                    foreground: '#333333',
+                    level: 'M'
                 });
+                
+                // Update the QR section with export info
+                const existingText = qrSection.querySelector('p');
+                if (existingText) {
+                    const exportTypeText = exportResult.type === 'lite' ? 
+                        'Contains trip parameters only. The app will regenerate the full itinerary.' :
+                        exportResult.type === 'compressed' ?
+                        'Contains essential itinerary data with limited details.' :
+                        'Contains the complete itinerary with all details.';
+                        
+                    existingText.innerHTML = `
+                        Scan this QR code with your phone to import this itinerary into the AI Travel Planner app.<br>
+                        <small style="color: #666; margin-top: 10px; display: block;">
+                            📦 ${exportResult.type.charAt(0).toUpperCase() + exportResult.type.slice(1)} Export (${exportResult.length} chars)<br>
+                            ${exportTypeText}
+                        </small>
+                    `;
+                }
                 
             } catch (error) {
                 console.error('Export generation error:', error);
                 qrCodeDiv.innerHTML = `
                     <p style="color: #ff6b6b; text-align: center; padding: 20px;">
                         ⚠️ Error generating QR code<br>
-                        <small>${error.message}</small>
+                        <small>${error.message}</small><br><br>
+                        <strong>Troubleshooting:</strong><br>
+                        • Try refreshing the page<br>
+                        • Check your internet connection<br>
+                        • Try a different browser
                     </p>
                 `;
             }
@@ -1101,6 +1109,13 @@
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             loadItineraryCards();
+            
+            // Check if QR code library loaded
+            if (typeof QRious === 'undefined') {
+                console.warn('QRious library not loaded. QR code generation may not work.');
+            } else {
+                console.log('QRious library loaded successfully');
+            }
             
             // Modal close button
             document.querySelector('.close').onclick = closeModal;
