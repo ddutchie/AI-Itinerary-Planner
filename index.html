@@ -772,6 +772,134 @@
         ];
 
         let currentItineraryData = null;
+        let currentItineraryFile = null;
+
+        // Helper function for proper UTF-8 base64 encoding (from mobile app)
+        function encodeBase64(str) {
+            try {
+                // Use the standard approach that works across all platforms
+                return btoa(unescape(encodeURIComponent(str)));
+            } catch (error) {
+                console.error('Encoding error:', error);
+                // If the standard approach fails, try a chunked approach
+                try {
+                    const utf8 = unescape(encodeURIComponent(str));
+                    let result = '';
+                    const chunkSize = 8192;
+                    for (let i = 0; i < utf8.length; i += chunkSize) {
+                        result += btoa(utf8.slice(i, i + chunkSize));
+                    }
+                    return result;
+                } catch (fallbackError) {
+                    console.error('Fallback encoding error:', fallbackError);
+                    throw new Error('Failed to encode data');
+                }
+            }
+        }
+
+        // Create ultra-lightweight export (just trip parameters for regeneration)
+        function createLiteExport(trip) {
+            return {
+                v: 2, // Version 2 - lite export
+                d: trip.destination,
+                s: trip.startDate,
+                e: trip.endDate,
+                b: trip.budget,
+                a: trip.activities,
+                h: trip.hasAccommodation || false,
+                l: trip.accommodationLocation || null
+            };
+        }
+
+        // Create compressed export with essential data only
+        function createCompressedExport(trip) {
+            const baseData = {
+                v: 1, // Version 1 - compressed export
+                d: trip.destination,
+                s: trip.startDate,
+                e: trip.endDate,
+                b: trip.budget,
+                a: trip.activities.slice(0, 5), // Limit to 5 activities
+                h: trip.hasAccommodation || false,
+                l: trip.accommodationLocation || null
+            };
+
+            // Only include minimal itinerary data if it exists
+            if (trip.itinerary && trip.itinerary.days.length > 0) {
+                baseData.i = {
+                    d: trip.itinerary.days.slice(0, 7).map(day => ({ // Max 7 days
+                        n: day.dayNumber,
+                        a: day.activities.slice(0, 4).map(activity => ({ // Max 4 activities per day
+                            n: activity.name.substring(0, 50), // Limit name to 50 chars
+                            t: activity.type,
+                            tm: activity.time,
+                            c: activity.cost,
+                            ad: activity.location.address.substring(0, 80) // Limit address to 80 chars
+                        }))
+                    })),
+                    b: trip.itinerary.totalBudgetEstimate
+                };
+            }
+
+            return baseData;
+        }
+
+        // Generate export code like the mobile app
+        function generateExportCode(trip) {
+            try {
+                console.log('Starting export generation for:', trip.destination);
+                
+                // Start with the most lightweight version
+                let exportData;
+                let jsonString;
+                let attemptType = 'lite';
+                
+                // First attempt: Ultra-lite export (just parameters for regeneration)
+                exportData = createLiteExport(trip);
+                jsonString = JSON.stringify(exportData);
+                console.log('Lite export JSON length:', jsonString.length);
+                
+                // If lite is too big, something is very wrong with the trip data
+                if (jsonString.length > 2000) {
+                    throw new Error('Trip data is corrupted or contains invalid data');
+                }
+                
+                // If lite is good, try compressed version with some itinerary data
+                if (jsonString.length < 1000 && trip.itinerary) {
+                    attemptType = 'compressed';
+                    exportData = createCompressedExport(trip);
+                    jsonString = JSON.stringify(exportData);
+                    console.log('Compressed export JSON length:', jsonString.length);
+                    
+                    // If compressed version is too big, fall back to lite
+                    if (jsonString.length > 2000) {
+                        console.log('Compressed version too large, falling back to lite export');
+                        attemptType = 'lite';
+                        exportData = createLiteExport(trip);
+                        jsonString = JSON.stringify(exportData);
+                    }
+                }
+                
+                // Validate essential trip data
+                if (!exportData.d || !exportData.s || !exportData.e) {
+                    throw new Error('Invalid trip data - missing essential fields');
+                }
+                
+                const base64 = encodeBase64(jsonString);
+                
+                console.log(`${attemptType.toUpperCase()} export generated - JSON: ${jsonString.length} chars, Base64: ${base64.length} chars`);
+                
+                return {
+                    code: base64,
+                    type: attemptType,
+                    length: base64.length
+                };
+                
+            } catch (error) {
+                console.error('Error generating export code:', error);
+                throw error;
+            }
+        }
 
         // Load and display itinerary cards
         function loadItineraryCards() {
@@ -808,6 +936,9 @@
             
             modalTitle.textContent = itinerary.name;
             modal.style.display = 'block';
+            
+            // Store the current itinerary file path
+            currentItineraryFile = itinerary.file;
             
             // Load the JSON data
             try {
@@ -903,22 +1034,52 @@
             // Clear previous QR code
             qrCodeDiv.innerHTML = '';
             
-            // Create QR code with the itinerary data
-            const itineraryUrl = `${window.location.origin}/${currentItineraryData.id}.json`;
-            
-            QRCode.toCanvas(qrCodeDiv, JSON.stringify(currentItineraryData), {
-                width: 256,
-                margin: 2,
-                color: {
-                    dark: '#333333',
-                    light: '#FFFFFF'
-                }
-            }, function (error) {
-                if (error) {
-                    console.error('QR Code generation error:', error);
-                    qrCodeDiv.innerHTML = '<p>Error generating QR code</p>';
-                }
-            });
+            try {
+                // Generate export code like the mobile app
+                const exportResult = generateExportCode(currentItineraryData);
+                
+                // Create QR code with the encoded trip data
+                QRCode.toCanvas(qrCodeDiv, exportResult.code, {
+                    width: 256,
+                    margin: 2,
+                    color: {
+                        dark: '#333333',
+                        light: '#FFFFFF'
+                    }
+                }, function (error) {
+                    if (error) {
+                        console.error('QR Code generation error:', error);
+                        qrCodeDiv.innerHTML = '<p>Error generating QR code</p>';
+                    } else {
+                        // Update the QR section with export info
+                        const existingText = qrSection.querySelector('p');
+                        if (existingText) {
+                            const exportTypeText = exportResult.type === 'lite' ? 
+                                'Contains trip parameters only. The app will regenerate the full itinerary.' :
+                                exportResult.type === 'compressed' ?
+                                'Contains essential itinerary data with limited details.' :
+                                'Contains the complete itinerary with all details.';
+                                
+                            existingText.innerHTML = `
+                                Scan this QR code with your phone to import this itinerary into the AI Travel Planner app.<br>
+                                <small style="color: #666; margin-top: 10px; display: block;">
+                                    📦 ${exportResult.type.charAt(0).toUpperCase() + exportResult.type.slice(1)} Export (${exportResult.length} chars)<br>
+                                    ${exportTypeText}
+                                </small>
+                            `;
+                        }
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Export generation error:', error);
+                qrCodeDiv.innerHTML = `
+                    <p style="color: #ff6b6b; text-align: center; padding: 20px;">
+                        ⚠️ Error generating QR code<br>
+                        <small>${error.message}</small>
+                    </p>
+                `;
+            }
         }
 
         // Format date for display
