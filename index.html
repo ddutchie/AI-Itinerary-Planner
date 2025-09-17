@@ -422,6 +422,22 @@
             transform: translateY(-2px);
         }
 
+        .btn-tertiary {
+            background: #ff6b35;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-tertiary:hover {
+            background: #e55a2e;
+            transform: translateY(-2px);
+        }
+
         .modal-body {
             padding: 30px;
         }
@@ -679,6 +695,7 @@
                 <div class="modal-actions">
                     <button id="viewItineraryBtn" class="btn-primary">View Full Itinerary</button>
                     <button id="showQRBtn" class="btn-secondary">Show QR Code</button>
+                    <button id="testBinaryBtn" class="btn-tertiary" onclick="testBinaryFormat()" title="Test binary format efficiency (check console)">🧪 Test Binary</button>
                 </div>
             </div>
             <div class="modal-body">
@@ -818,6 +835,112 @@
             }
         }
 
+        // =====================================================================
+        // BINARY FORMAT ENCODER (EXPERIMENTAL - MUCH MORE EFFICIENT)
+        // =====================================================================
+        
+        class BinaryTripEncoder {
+            constructor() {
+                this.budgetEnum = { 'budget': 0, 'mid-range': 1, 'luxury': 2 };
+                this.budgetNames = ['budget', 'mid-range', 'luxury'];
+            }
+
+            encode(tripData) {
+                const buffer = [];
+                
+                // HEADER (3 bytes)
+                buffer.push(tripData.v); // Version
+                
+                // Pack budget (2 bits) + hasAccommodation (1 bit)
+                const budgetCode = this.budgetEnum[tripData.b] || 0;
+                const flags = (budgetCode & 0x03) | ((tripData.h ? 1 : 0) << 2);
+                buffer.push(flags);
+                
+                buffer.push(tripData.a.length); // Activity count
+                
+                // DATES (8 bytes) - Unix timestamps vs 48-char ISO strings
+                const startDate = Math.floor(new Date(tripData.s).getTime() / 1000);
+                const endDate = Math.floor(new Date(tripData.e).getTime() / 1000);
+                
+                // 32-bit unsigned integers
+                buffer.push((startDate >> 24) & 0xFF, (startDate >> 16) & 0xFF, 
+                           (startDate >> 8) & 0xFF, startDate & 0xFF);
+                buffer.push((endDate >> 24) & 0xFF, (endDate >> 16) & 0xFF, 
+                           (endDate >> 8) & 0xFF, endDate & 0xFF);
+                
+                // STRINGS (variable length with length prefixes)
+                this.writeString(buffer, tripData.d); // Destination
+                
+                if (tripData.h && tripData.l) {
+                    this.writeString(buffer, tripData.l); // Accommodation location
+                }
+                
+                // Activities
+                for (const activity of tripData.a) {
+                    this.writeString(buffer, activity);
+                }
+                
+                return new Uint8Array(buffer);
+            }
+
+            writeString(buffer, str) {
+                const utf8 = new TextEncoder().encode(str);
+                buffer.push(utf8.length); // Length prefix
+                for (const byte of utf8) {
+                    buffer.push(byte);
+                }
+            }
+
+            // Convert binary to base64 for QR codes
+            encodeToBase64(tripData) {
+                const binaryData = this.encode(tripData);
+                return btoa(String.fromCharCode(...binaryData));
+            }
+        }
+
+        // Size comparison function
+        function compareSizes(tripData) {
+            const encoder = new BinaryTripEncoder();
+            
+            // Current JSON approach
+            const jsonString = JSON.stringify(tripData);
+            const jsonBase64 = encodeBase64(jsonString);
+            
+            // Binary approach
+            const binaryBase64 = encoder.encodeToBase64(tripData);
+            
+            const savings = ((jsonBase64.length - binaryBase64.length) / jsonBase64.length * 100);
+            
+            console.log('=== SIZE COMPARISON ===');
+            console.log('JSON + Base64:', jsonBase64.length, 'chars');
+            console.log('Binary + Base64:', binaryBase64.length, 'chars');
+            console.log('Savings:', savings.toFixed(1) + '%', `(${jsonBase64.length - binaryBase64.length} chars smaller)`);
+            console.log('JSON data:', jsonString);
+            console.log('Binary data (base64):', binaryBase64);
+            
+            return {
+                jsonSize: jsonBase64.length,
+                binarySize: binaryBase64.length,
+                savings: savings,
+                jsonData: jsonBase64,
+                binaryData: binaryBase64
+            };
+        }
+
+        // =====================================================================
+        // QR CODE EXPORT OPTIMIZATION SYSTEM
+        // =====================================================================
+        // This system ensures QR codes remain small and scannable by:
+        // 1. NEVER including image data, base64 content, or large descriptions
+        // 2. Using tiered export levels (lite -> compressed)
+        // 3. Aggressive size limits and validation
+        // 4. Falling back to smaller exports if limits exceeded
+        // 
+        // LITE EXPORT: Only essential trip parameters (~200-500 chars)
+        // COMPRESSED EXPORT: Minimal itinerary data (~500-2000 chars)
+        // NO FULL EXPORT: Removed to prevent large QR codes
+        // =====================================================================
+
         // Create ultra-lightweight export (just trip parameters for regeneration)
         function createLiteExport(trip) {
             return {
@@ -832,7 +955,7 @@
             };
         }
 
-        // Create compressed export with essential data only
+        // Create compressed export with essential data only (NO IMAGES OR LARGE CONTENT)
         function createCompressedExport(trip) {
             const baseData = {
                 v: 1, // Version 1 - compressed export
@@ -845,7 +968,7 @@
                 l: trip.accommodationLocation || null
             };
 
-            // Only include minimal itinerary data if it exists
+            // Only include minimal itinerary data if it exists (EXPLICITLY EXCLUDE IMAGES & LARGE CONTENT)
             if (trip.itinerary && trip.itinerary.days.length > 0) {
                 baseData.i = {
                     d: trip.itinerary.days.slice(0, 7).map(day => ({ // Max 7 days
@@ -856,6 +979,7 @@
                             tm: activity.time,
                             c: activity.cost,
                             ad: activity.location.address.substring(0, 80) // Limit address to 80 chars
+                            // NOTE: Deliberately excluding: images, photos, descriptions, tips, websites, etc.
                         }))
                     })),
                     b: trip.itinerary.totalBudgetEstimate
@@ -870,8 +994,64 @@
             return jsonFilePath.replace('.json', '.png');
         }
 
-        // Generate export code like the mobile app
-        function generateExportCode(trip) {
+        // Validate export data doesn't contain large content (images, base64, etc.)
+        function validateExportSize(data, type) {
+            const jsonString = JSON.stringify(data);
+            const maxSizes = { lite: 2000, compressed: 2000 };
+            
+            // Check for potential large content indicators
+            if (jsonString.includes('data:image') || jsonString.includes('base64')) {
+                throw new Error(`${type} export contains image/base64 data - this should never happen!`);
+            }
+            
+            if (jsonString.length > maxSizes[type]) {
+                console.warn(`${type} export too large (${jsonString.length} chars), contains:`, 
+                    Object.keys(data).map(key => `${key}: ${JSON.stringify(data[key]).length} chars`));
+                return false;
+            }
+            
+            console.log(`✓ ${type} export validated: ${jsonString.length} chars (under ${maxSizes[type]} limit)`);
+            return true;
+        }
+
+        // Test binary format efficiency with sample data
+        function testBinaryFormat() {
+            console.log('🧪 TESTING BINARY FORMAT EFFICIENCY');
+            console.log('=' * 50);
+            
+            const testCases = [
+                {
+                    name: "Short Trip",
+                    data: { v: 2, d: "Tokyo", s: "2024-06-15T00:00:00.000Z", e: "2024-06-17T00:00:00.000Z", b: "budget", a: ["Food", "Temples"], h: false, l: null }
+                },
+                {
+                    name: "Medium Trip", 
+                    data: { v: 2, d: "New York City", s: "2024-06-15T00:00:00.000Z", e: "2024-06-20T00:00:00.000Z", b: "mid-range", a: ["Museums", "Broadway", "Central Park", "Shopping"], h: true, l: "Manhattan" }
+                },
+                {
+                    name: "Long Trip",
+                    data: { v: 2, d: "Paris, France", s: "2024-06-15T00:00:00.000Z", e: "2024-06-25T00:00:00.000Z", b: "luxury", a: ["Fine Dining", "Art & Museums", "Shopping", "Architecture", "Wine Tasting", "Spa"], h: true, l: "Champs-Élysées District" }
+                }
+            ];
+
+            let totalJsonSize = 0, totalBinarySize = 0;
+            
+            testCases.forEach(testCase => {
+                console.log(`\n${testCase.name}:`);
+                const result = compareSizes(testCase.data);
+                totalJsonSize += result.jsonSize;
+                totalBinarySize += result.binarySize;
+            });
+            
+            const overallSavings = ((totalJsonSize - totalBinarySize) / totalJsonSize * 100);
+            console.log(`\n🎯 OVERALL SAVINGS: ${overallSavings.toFixed(1)}% across all test cases`);
+            console.log(`📊 Total chars saved: ${totalJsonSize - totalBinarySize}`);
+            
+            return { totalJsonSize, totalBinarySize, overallSavings };
+        }
+
+        // Generate export code like the mobile app (OPTIMIZED FOR SIZE - NO IMAGES)
+        function generateExportCode(trip, useBinaryFormat = false) {
             try {
                 console.log('Starting export generation for:', trip.destination);
                 
@@ -882,27 +1062,28 @@
                 
                 // First attempt: Ultra-lite export (just parameters for regeneration)
                 exportData = createLiteExport(trip);
+                
+                // Validate lite export doesn't contain large data
+                if (!validateExportSize(exportData, 'lite')) {
+                    throw new Error('Lite export contains unexpected large data');
+                }
+                
                 jsonString = JSON.stringify(exportData);
                 console.log('Lite export JSON length:', jsonString.length);
                 
-                // If lite is too big, something is very wrong with the trip data
-                if (jsonString.length > 2000) {
-                    throw new Error('Trip data is corrupted or contains invalid data');
-                }
-                
                 // If lite is good, try compressed version with some itinerary data
                 if (jsonString.length < 1000 && trip.itinerary) {
-                    attemptType = 'compressed';
-                    exportData = createCompressedExport(trip);
-                    jsonString = JSON.stringify(exportData);
-                    console.log('Compressed export JSON length:', jsonString.length);
+                    const compressedData = createCompressedExport(trip);
                     
-                    // If compressed version is too big, fall back to lite
-                    if (jsonString.length > 2000) {
-                        console.log('Compressed version too large, falling back to lite export');
-                        attemptType = 'lite';
-                        exportData = createLiteExport(trip);
+                    // Validate compressed export
+                    if (validateExportSize(compressedData, 'compressed')) {
+                        attemptType = 'compressed';
+                        exportData = compressedData;
                         jsonString = JSON.stringify(exportData);
+                        console.log('✓ Using compressed export:', jsonString.length, 'chars');
+                    } else {
+                        console.log('Compressed version too large, falling back to lite export');
+                        // Keep using lite export (already validated above)
                     }
                 }
                 
@@ -911,13 +1092,30 @@
                     throw new Error('Invalid trip data - missing essential fields');
                 }
                 
-                const base64 = encodeBase64(jsonString);
+                let base64, format;
                 
-                console.log(`${attemptType.toUpperCase()} export generated - JSON: ${jsonString.length} chars, Base64: ${base64.length} chars`);
+                if (useBinaryFormat) {
+                    // Use binary format for maximum efficiency
+                    const encoder = new BinaryTripEncoder();
+                    base64 = encoder.encodeToBase64(exportData);
+                    format = 'binary';
+                    console.log(`✓ BINARY ${attemptType.toUpperCase()} export - Direct binary: ${base64.length} chars`);
+                } else {
+                    // Use JSON format (current approach)
+                    base64 = encodeBase64(jsonString);
+                    format = 'json';
+                    console.log(`✓ JSON ${attemptType.toUpperCase()} export - JSON: ${jsonString.length} chars, Base64: ${base64.length} chars`);
+                }
+                
+                // Final validation - ensure QR code won't be too large
+                if (base64.length > 2500) {
+                    console.warn(`⚠️ QR code may be too large (${base64.length} chars) - consider binary format or further optimization`);
+                }
                 
                 return {
                     code: base64,
                     type: attemptType,
+                    format: format,
                     length: base64.length
                 };
                 
@@ -1101,14 +1299,13 @@
                 if (existingText) {
                     const exportTypeText = exportResult.type === 'lite' ? 
                         'Contains trip parameters only. The app will regenerate the full itinerary.' :
-                        exportResult.type === 'compressed' ?
-                        'Contains essential itinerary data with limited details.' :
-                        'Contains the complete itinerary with all details.';
+                        'Contains essential itinerary data with limited details (no images or large content).';
                         
                     existingText.innerHTML = `
                         Scan this QR code with your phone to import this itinerary into the AI Travel Planner app.<br>
                         <small style="color: #666; margin-top: 10px; display: block;">
                             📦 ${exportResult.type.charAt(0).toUpperCase() + exportResult.type.slice(1)} Export (${exportResult.length} chars)<br>
+                            Format: ${exportResult.format || 'json'} encoding<br>
                             ${exportTypeText}
                         </small>
                     `;
